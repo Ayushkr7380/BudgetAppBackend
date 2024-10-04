@@ -4,6 +4,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import userAuth from './routes/user.auth.js';
+import userItem from './routes/user.Items.js';
 
 config();
 const app = express();
@@ -21,6 +22,7 @@ app.use(cors({
 // });
 
 app.use('/auth',userAuth);
+app.use('/api',userItem);
 
 app.all('*',(req,res)=>{
     res.status(404).send('Page not found!!');
