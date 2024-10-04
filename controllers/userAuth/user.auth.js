@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { User }  from "../../models/userModel.js";
+import { BudgetUser}  from "../../models/userModel.js";
 export const userLogin = async(req,res) =>{
     try {
         
@@ -20,8 +20,8 @@ export const userSignUp = async(req,res) =>{
             });
         }
 
-        const userExist = await User.findOne({email});
-        if(!userExist){
+        const userExist = await BudgetUser.findOne({email});
+        if(userExist){
             return res.status(400).json({
                 success:false,
                 message:'User already exists.'
@@ -32,7 +32,7 @@ export const userSignUp = async(req,res) =>{
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password,salt);
 
-        const user = await User.create({
+        const user = await BudgetUser.create({
             name,
             email,
             password:hashedPassword
