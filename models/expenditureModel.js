@@ -94,8 +94,14 @@ const expenditureSchema = new Schema({
         ref:'BudgetUser',
         required:true
     },
-    datalist:{       
-        data:[
+    
+    datalist:[
+    {    
+        date:{
+            type:String,
+            required:true
+        },   
+        data: [
             {
                 itemname:{
                     type:String,
@@ -107,7 +113,8 @@ const expenditureSchema = new Schema({
                 }
             }
         ],
-    }
+        }
+    ]
 },{
     timestamps:true
 });

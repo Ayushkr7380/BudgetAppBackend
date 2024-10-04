@@ -1,39 +1,42 @@
-import Expenditure from "../../models/expenditure.js";
+import Expenditure from "../../models/expenditureModel.js";
 
 export const userItem = async(req,res) =>{
     try {
         const { id } = req.user;
-        const { itemname , price } = req.body;    
-        if(!itemname || !price){
+        const { itemname , price ,date} = req.body;    
+        if(!itemname || !price || !date){
             return res.status(400).json({
                 success:false,
                 message:'All fields are required.'
             });
         }    
 
-        const expenditure = await Expenditure.findOneAndUpdate(
-            { user: id },
-            {
-                $push: {
-                    "datalist.data": {
-                        itemname,
-                        price
-                    }
-                }
-            },
-            { 
-                new: true, // Return the updated document
-                upsert: true, // Create a new document if none exists
-                useFindAndModify: false // Avoid deprecation warning
-            }
-        );
+        // Find the expenditure for the logged-in user
+        let expenditure = await Expenditure.findOne({ user: id });
+        if (!expenditure) {
+            // If no expenditure document exists for the user, create a new one
+            expenditure = await Expenditure.create({
+                user: id,
+                datalist: [{ date, data: [{ itemname, price }] }] // Initialize the date with the first item
+            });
+        } else {
+            // Check if the date already exists in the datalist
+            const dateEntry = expenditure.datalist.find(entry => entry.date === date);
 
-        if(!expenditure){
-            return res.status(400).json({
-                success:false,
-                message:'Failed to save in database.'
-            })
+            if (dateEntry) {
+                // If the date exists, push the new item to its data array
+                dateEntry.data.push({ itemname, price });
+            } else {
+                // If the date does not exist, create a new entry with the provided date
+                expenditure.datalist.push({
+                    date,
+                    data: [{ itemname, price }]
+                });
+            }
         }
+
+        // Save the document
+        await expenditure.save();
 
         res.status(200).json({
             success:true,
