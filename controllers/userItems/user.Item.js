@@ -2,6 +2,7 @@ import Expenditure from "../../models/expenditure.js";
 
 export const userItem = async(req,res) =>{
     try {
+        const { id } = req.user;
         const { itemname , price } = req.body;    
         if(!itemname || !price){
             return res.status(400).json({
@@ -10,7 +11,22 @@ export const userItem = async(req,res) =>{
             });
         }    
 
-        const expenditure = await Expenditure();
+        const expenditure = await Expenditure.findOneAndUpdate(
+            { user: id },
+            {
+                $push: {
+                    "datalist.data": {
+                        itemname,
+                        price
+                    }
+                }
+            },
+            { 
+                new: true, // Return the updated document
+                upsert: true, // Create a new document if none exists
+                useFindAndModify: false // Avoid deprecation warning
+            }
+        );
 
         if(!expenditure){
             return res.status(400).json({

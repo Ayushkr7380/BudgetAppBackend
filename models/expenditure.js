@@ -89,12 +89,12 @@ import { Schema , model  } from "mongoose";
 // const expenditure = model('expenditure',expenditureSchema);
 
 const expenditureSchema = new Schema({
-    datalist:{
-        user:{
-            type:Schema.Types.ObjectId,
-            ref:'BudgetUser',
-            required:true
-        },
+    user:{
+        type:Schema.Types.ObjectId,
+        ref:'BudgetUser',
+        required:true
+    },
+    datalist:{       
         data:[
             {
                 itemname:{
@@ -107,10 +107,6 @@ const expenditureSchema = new Schema({
                 }
             }
         ],
-        totalamount:{
-            type:String,
-            required:true
-        }
     }
 },{
     timestamps:true
