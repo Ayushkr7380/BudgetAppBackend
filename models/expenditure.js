@@ -90,6 +90,11 @@ import { Schema , model  } from "mongoose";
 
 const expenditureSchema = new Schema({
     datalist:{
+        user:{
+            type:Schema.Types.ObjectId,
+            ref:'BudgetUser',
+            required:true
+        },
         data:[
             {
                 itemname:{
