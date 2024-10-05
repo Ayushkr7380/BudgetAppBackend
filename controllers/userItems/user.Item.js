@@ -2,8 +2,13 @@ import Expenditure from "../../models/expenditureModel.js";
 
 export const userItem = async(req,res) =>{
     try {
+        //Get loggedIn user id
         const { id } = req.user;
-        const { itemname , price ,date} = req.body;    
+
+        //Fetch data from frontend
+        const { itemname , price ,date} = req.body;  
+        
+        //Check the data is fetched or not
         if(!itemname || !price || !date){
             return res.status(400).json({
                 success:false,
@@ -11,13 +16,21 @@ export const userItem = async(req,res) =>{
             });
         }    
 
-        // Find the expenditure for the logged-in user
+        // Find the expenditure for the loggedIn user
         let expenditure = await Expenditure.findOne({ user: id });
         if (!expenditure) {
             // If no expenditure document exists for the user, create a new one
             expenditure = await Expenditure.create({
                 user: id,
-                datalist: [{ date, data: [{ itemname, price }] }] // Initialize the date with the first item
+                datalist: [
+                    { 
+                        date,
+                        data: [
+                            { 
+                                itemname, 
+                                price 
+                            }] 
+                    }] // Initialize the date with the first item
             });
         } else {
             // Check if the date already exists in the datalist
