@@ -111,3 +111,35 @@ export const userSignUp = async(req,res) =>{
         })
     }
 }
+
+export const showUserDetails = async(req,res) =>{
+    try {
+        const { id } = req.user;
+        if(!id){
+            return res.status(400).json({
+                success:false,
+                message:'User id not found.'
+            });
+        }
+
+        const user = await BudgetUser.findById({_id:id});
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:'User not found.'
+            });
+        }
+
+        user.password = undefined;
+        res.status(200).json({
+            success:true,
+            message:'User Found.',
+            user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+}

@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { userItem } from "../controllers/userItems/user.Item.js";
 import { loggedIn } from "../middleware/checkLoggedIn.js";
+import { userItems } from "../controllers/userItems/userItem.js";
+
 
 const router = Router();
 
-router.post('/additem',loggedIn,userItem);
+router.post('/additem',loggedIn,userItems);
+
+
 
 export default router;
