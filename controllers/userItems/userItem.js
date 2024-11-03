@@ -29,3 +29,30 @@ export const userItems = async(req,res,next) =>{
         console.log(error.message);
     }
 }
+
+export const getUserItems = async(req,res) =>{
+    try {
+        const {id} = req.user;
+        const expenditureData = await TestSchema.find({user:id});
+        
+
+        // Format the expenditureData to include date as DD-MM-YYYY
+        const formattedData = expenditureData.map(item => {
+            const date = new Date(item.ExpenditureDate);
+            return {
+                ...item._doc,
+                ExpenditureDate: `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}` // Format the date as DD-MM-YYYY
+            };
+        });
+        res.status(200).json({
+            success:true,
+            message:'Expenditure data fetched successfully..',
+            expenditureData:formattedData
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+}
