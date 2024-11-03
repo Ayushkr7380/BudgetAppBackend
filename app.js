@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 
 // app.use(cors({
-//     Credential:true
+//     Credentials:true
 // }));
 
 const corsOptions ={

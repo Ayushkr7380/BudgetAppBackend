@@ -115,6 +115,7 @@ export const userSignUp = async(req,res) =>{
 export const showUserDetails = async(req,res) =>{
     try {
         const { id } = req.user;
+        console.log("id : ",id);
         if(!id){
             return res.status(400).json({
                 success:false,
@@ -135,6 +136,26 @@ export const showUserDetails = async(req,res) =>{
             success:true,
             message:'User Found.',
             user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+}
+
+export const userLogout = async(req,res)=>{
+    try {
+        res.cookie('token',null,{
+            httpOnly:true,
+            secure:true,
+            maxAge : 0
+        });
+
+        res.status(200).json({
+            success:true,
+            message:'User logout successfully.'
         })
     } catch (error) {
         return res.status(500).json({

@@ -2,7 +2,9 @@ import jwt from 'jsonwebtoken';
 
 export const loggedIn = async(req,res,next) =>{
     try {
-        const {token} = req.cookies;
+        
+        const {token} = req?.cookies;
+        console.log("Token from the middleware : ",token);
         if(!token){
             return res.status(400).json({
                 success:false,
