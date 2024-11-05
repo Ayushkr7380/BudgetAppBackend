@@ -88,10 +88,35 @@ export const deleteUserItem = async(req,res)=>{
     }
 }
 
-export const updateUserItem = (req,res)=>{
+export const updateUserItem = async(req,res)=>{
     try {
+        const { id , name , price } = req.body;
+        if(!id){
+            return res.status(404).json({
+                success:false,
+                message:'Item id not found.'
+            })
+        }    
         
+        const item = await TestSchema.findByIdAndUpdate({_id:id},{
+            ExpenditureName:name,
+            ExpenditureAmount:price
+        });
+        if(!item){
+            return res.status(400).json({
+                success:false,
+                message:'Failed to edit item.'
+            });
+        }
+        res.status(200).json({
+            success:true,
+            message : 'Edited successfully',
+            item
+        });
     } catch (error) {
-        
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        });
     }
 }
