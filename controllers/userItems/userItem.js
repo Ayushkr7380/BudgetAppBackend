@@ -56,3 +56,42 @@ export const getUserItems = async(req,res) =>{
         });
     }
 }
+
+export const deleteUserItem = async(req,res)=>{
+    try {
+        const { id } = req.body;
+        if(!id){
+            return res.status(404).json({
+                success:false,
+                message:'Item id not found.'
+            })
+        }
+
+        const item = await TestSchema.findByIdAndDelete({_id:id});
+        if(!item){
+            return res.status(400).json({
+                success:false,
+                message:'Failed to delete item.'
+            });
+        }
+
+        res.status(200).json({
+            success:true,
+            message : 'deleted successfully',
+            item
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        });
+    }
+}
+
+export const updateUserItem = (req,res)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+}
