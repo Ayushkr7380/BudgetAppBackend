@@ -1,6 +1,14 @@
 import bcrypt from "bcryptjs";
 import { BudgetUser}  from "../../models/userModel.js";
 import jwt from "jsonwebtoken";
+
+const cookiesOption = {
+    httpOnly:true,
+    secure:true,
+    maxAge : 5 * 24 * 60 * 60 * 1000,
+    sameSite: "None", // Allows cross-site cookies
+}
+
 export const userLogin = async(req,res) =>{
     try {
         const { email , password } = req.body;
@@ -43,11 +51,7 @@ export const userLogin = async(req,res) =>{
 
         //Add token into cookies
 
-        res.cookie('token',token,{
-            httpOnly:true,
-            secure:true,
-            maxAge : 5 * 24 * 60 * 60 * 1000
-        });
+        res.cookie('token',token,cookiesOption);
 
         res.status(200).json({
             success:true,
@@ -147,10 +151,17 @@ export const showUserDetails = async(req,res) =>{
 
 export const userLogout = async(req,res)=>{
     try {
-        res.cookie('token',null,{
-            httpOnly:true,
-            secure:true,
-            maxAge : 0
+        // res.cookie('token',null,{
+        //     httpOnly:true,
+        //     secure:true,
+        //     maxAge : 0
+        // });
+
+        res.cookie("token", "", {
+            httpOnly: true,
+            secure: true,  // Required for HTTPS
+            sameSite: "None",  // Required for cross-site cookies
+            expires: new Date(0),  // Expires the cookie immediately
         });
 
         res.status(200).json({
